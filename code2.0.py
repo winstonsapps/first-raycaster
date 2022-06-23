@@ -35,8 +35,8 @@ MOVEMENT_KEYBINDS = { # nice keybinds that are easy to modify
     pygame.K_RIGHT :  (0, -rotation_speed, 0), # turn right
     pygame.K_w :    (speed, 0, 0), # move forwards
     pygame.K_s :  (-speed, 0, 0), # move backwards
-    pygame.K_a :  (0, speed, 90), # strafe left
-    pygame.K_d :  (0, speed, -90),# strafe right
+    pygame.K_a :  (speed, 0, -90), # strafe left
+    pygame.K_d :  (speed, 0, 90),# strafe right
 }
 
 """ end keybind setup """
@@ -47,7 +47,7 @@ maptext = [] # creates maptext list for parsing
 map = [] # will be filled with rects
 mapsize = 20 # size should be divisible by it
 map_part_size = int(size/mapsize) # size of each rect in the map
-load = input("load file (Y/N): ") # asks user if they want to load a file
+load = "n" #input("load file (Y/N): ") # asks user if they want to load a file
 if load != "Y":
     for i in range(mapsize):
         maptext.append([]) # adds new row
@@ -84,11 +84,15 @@ for i in range(mapsize): # this thing converts the text into a list or rects
 
 
 """ end map setup """
+"""text setup"""
+#roboto_mono_10 = pygame.font.Font()
+"""end text setup"""
+
 
 """ debug stuff """
 block_surface = pygame.Surface((map_part_size, map_part_size)) # a debug square
 block_surface.fill(white)
-player_sprite = pygame.Surface((4,4))
+player_sprite = pygame.Surface((8,8))
 player_sprite.fill(yellow)
 
 """end debug stuff"""
@@ -98,7 +102,7 @@ FOV = 90
 RES = 2 # thickness of lines
 scan_lines = size/RES # amount of times to iteriate
 
-player = player1.Player(size/2,size/2,4,map)
+player = player1.Player(size/2+map_part_size/2,size/2+map_part_size/2,8,map)
 raycaster = player1.Raycaster(map)
 """end game setup"""
 
@@ -115,8 +119,9 @@ while True:
             if event.key in MOVEMENT_KEYBINDS:
                 player.direction-=MOVEMENT_KEYBINDS[event.key][2] # turn rotation offset
                 player.direction-=MOVEMENT_KEYBINDS[event.key][1] # turn rotation
-                player.move(MOVEMENT_KEYBINDS[event.key][0]) # move
+                player.move(-MOVEMENT_KEYBINDS[event.key][0]) # move
                 player.direction+=MOVEMENT_KEYBINDS[event.key][2] # turn back rotation offset
+                print(player.direction)
     # debug rendering
     screen.fill(black)
     for block in map:
